@@ -1,0 +1,2364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rising Eagles - Young Leaders Training | Depths to Heights</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1E40AF;
+            --secondary: #7C3AED;
+            --accent: #F59E0B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --light: #F9FAFB;
+            --dark: #111827;
+            --gold: #FCD34D;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #DBEAFE 0%, #EDE9FE 50%, #FEF3C7 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding-top: 60px;
+            padding-bottom: 80px;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 2px 10px var(--shadow);
+            z-index: 1001;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(10px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-10px) rotate(-45deg);
+        }
+
+        .nav-title {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-back {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .nav-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .audio-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .audio-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 60px;
+            left: -300px;
+            width: 280px;
+            height: calc(100vh - 60px);
+            background: white;
+            box-shadow: 2px 0 10px var(--shadow);
+            transition: left 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .side-menu.active {
+            left: 0;
+        }
+
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .menu-overlay.active {
+            display: block;
+        }
+
+        .menu-section {
+            padding: 20px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .menu-section h3 {
+            color: var(--primary);
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin: 5px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--dark);
+        }
+
+        .menu-item:hover {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.1), rgba(124, 58, 237, 0.1));
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            min-height: calc(100vh - 140px);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.95), rgba(245, 158, 11, 0.95)),
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23DBEAFE" width="1200" height="800"/><circle fill="rgba(245,158,11,0.2)" cx="200" cy="200" r="150"/><circle fill="rgba(124,58,237,0.2)" cx="1000" cy="600" r="200"/></svg>');
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            min-height: 100vh;
+            margin-top: -60px;
+        }
+
+        .welcome-screen h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            animation: soar 3s ease-in-out infinite;
+        }
+
+        @keyframes soar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .eagle-icon {
+            font-size: 80px;
+            margin: 20px 0;
+            animation: fly 4s ease-in-out infinite;
+        }
+
+        @keyframes fly {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .verse-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        .enter-btn {
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            color: var(--dark);
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+        }
+
+        /* Dashboard */
+        .dashboard-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .user-progress {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        .progress-header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .progress-badges {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .level-badge {
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            color: var(--dark);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .streak-counter {
+            background: linear-gradient(135deg, var(--success), #34D399);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            background: #E5E7EB;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            height: 100%;
+            width: 0%;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Course Grid */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .course-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px var(--shadow);
+            transition: all 0.3s;
+            cursor: pointer;
+            border-top: 5px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px var(--shadow);
+        }
+
+        .course-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .course-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .course-description {
+            color: #6B7280;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .course-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .lessons-count {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        .course-status {
+            background: var(--success);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        /* Lesson View */
+        .lesson-container {
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .lesson-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        .lesson-header {
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .lesson-title {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .lesson-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: #6B7280;
+        }
+
+        .lesson-content {
+            line-height: 1.8;
+            color: var(--dark);
+        }
+
+        .lesson-content h3 {
+            color: var(--secondary);
+            margin: 25px 0 15px;
+            font-size: 22px;
+        }
+
+        .lesson-content p {
+            margin-bottom: 15px;
+        }
+
+        .scripture-box {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.05), rgba(245, 158, 11, 0.05));
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+            margin: 20px 0;
+        }
+
+        .scripture-box cite {
+            display: block;
+            text-align: right;
+            margin-top: 10px;
+            font-style: italic;
+            color: var(--secondary);
+        }
+
+        .lesson-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px var(--shadow);
+            margin: 25px auto;
+            max-width: 800px;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .quiz-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #E5E7EB;
+            transition: all 0.3s;
+        }
+
+        .quiz-dot.active {
+            background: var(--primary);
+            transform: scale(1.3);
+        }
+
+        .quiz-dot.completed {
+            background: var(--success);
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.03), rgba(124, 58, 237, 0.03));
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            color: var(--dark);
+            margin-bottom: 25px;
+        }
+
+        .answer-option {
+            background: white;
+            padding: 15px 20px;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .answer-option:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .answer-option.selected {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.1), rgba(124, 58, 237, 0.1));
+            border-color: var(--primary);
+        }
+
+        .answer-option.correct {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+        }
+
+        .answer-option.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+        }
+
+        .quiz-feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Accountability Section */
+        .accountability-container {
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .partner-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px var(--shadow);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .partner-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .partner-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .partner-details h4 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .partner-details p {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        .check-in-btn {
+            background: linear-gradient(135deg, var(--success), #34D399);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .check-in-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Certificate Section */
+        .certificate {
+            background: linear-gradient(135deg, white, #FEF3C7);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            text-align: center;
+            margin: 30px auto;
+            max-width: 700px;
+            border: 3px solid var(--gold);
+            position: relative;
+        }
+
+        .certificate::before {
+            content: '✨';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+        }
+
+        .certificate::after {
+            content: '✨';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+        }
+
+        .certificate h2 {
+            color: var(--primary);
+            font-size: 36px;
+            margin-bottom: 20px;
+            font-family: 'Georgia', serif;
+        }
+
+        .certificate .recipient {
+            font-size: 28px;
+            color: var(--secondary);
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .certificate-seal {
+            background: var(--gold);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #34D399);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            color: var(--dark);
+        }
+
+        .btn-secondary {
+            background: #6B7280;
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #F87171);
+            color: white;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px var(--shadow);
+            z-index: 999;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            padding: 5px 10px;
+            transition: all 0.3s;
+            flex: 1;
+            user-select: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .nav-label {
+            font-size: 12px;
+        }
+
+        /* Messages */
+        .message {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 600px;
+            animation: slideIn 0.5s;
+        }
+
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success);
+            color: #047857;
+        }
+
+        .message.info {
+            background: rgba(30, 64, 175, 0.1);
+            border-left: 4px solid var(--primary);
+            color: #1E3A8A;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Quick Access Bar */
+        .quick-access {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 2px 5px var(--shadow);
+            margin-bottom: 20px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .quick-btn {
+            flex-shrink: 0;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .quick-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            color: var(--dark);
+            border: none;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+            cursor: pointer;
+            z-index: 998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+        }
+
+        .fab-menu {
+            position: fixed;
+            bottom: 170px;
+            right: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 997;
+        }
+
+        .fab-menu.active {
+            display: flex;
+        }
+
+        .fab-option {
+            background: white;
+            padding: 10px 16px;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px var(--shadow);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fab-option:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+            }
+
+            .welcome-screen h1 {
+                font-size: 36px;
+            }
+
+            .nav-title {
+                font-size: 16px;
+            }
+
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .lesson-title {
+                font-size: 24px;
+            }
+
+            .certificate h2 {
+                font-size: 28px;
+            }
+
+            .partner-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .fab {
+                bottom: 90px;
+                right: 15px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="nav-left">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-title">Rising Eagles</div>
+        </div>
+        <div class="nav-right">
+            <div class="nav-back" onclick="goBack()" id="backBtn" style="display: none;">← Back</div>
+            <div class="audio-toggle" onclick="toggleAudio()">
+                <span id="audioIcon">🎵</span>
+                <span id="audioText">Music</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Menu -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-section">
+            <h3>LEARNING</h3>
+            <div class="menu-item" onclick="navigateTo('dashboard')">
+                <span class="menu-icon">📚</span>
+                <span class="menu-label">My Courses</span>
+            </div>
+            <div class="menu-item" onclick="navigateTo('lessons')">
+                <span class="menu-icon">📖</span>
+                <span class="menu-label">Current Lesson</span>
+            </div>
+            <div class="menu-item" onclick="navigateTo('quiz')">
+                <span class="menu-icon">✅</span>
+                <span class="menu-label">Take Quiz</span>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <h3>GROWTH</h3>
+            <div class="menu-item" onclick="navigateTo('devotional')">
+                <span class="menu-icon">🙏</span>
+                <span class="menu-label">Daily Devotional</span>
+            </div>
+            <div class="menu-item" onclick="navigateTo('scripture')">
+                <span class="menu-icon">📜</span>
+                <span class="menu-label">Scripture Memory</span>
+            </div>
+            <div class="menu-item" onclick="navigateTo('accountability')">
+                <span class="menu-icon">🤝</span>
+                <span class="menu-label">Accountability</span>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <h3>PROGRESS</h3>
+            <div class="menu-item" onclick="navigateTo('achievements')">
+                <span class="menu-icon">🏆</span>
+                <span class="menu-label">Achievements</span>
+            </div>
+            <div class="menu-item" onclick="navigateTo('certificates')">
+                <span class="menu-icon">📜</span>
+                <span class="menu-label">Certificates</span>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <h3>SUPPORT</h3>
+            <div class="menu-item" onclick="navigateTo('crisis')">
+                <span class="menu-icon">🆘</span>
+                <span class="menu-label">Crisis Help</span>
+            </div>
+            <div class="menu-item" onclick="navigateTo('resources')">
+                <span class="menu-icon">📚</span>
+                <span class="menu-label">Resources</span>
+            </div>
+            <div class="menu-item" onclick="navigateTo('info')">
+                <span class="menu-icon">ℹ️</span>
+                <span class="menu-label">App Info</span>
+            </div>
+            <div class="menu-item" onclick="navigateTo('about')">
+                <span class="menu-icon">✨</span>
+                <span class="menu-label">About Ministry</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome" class="screen welcome-screen active">
+        <div class="eagle-icon">🦅</div>
+        <h1>Rising Eagles</h1>
+        <div class="verse-card">
+            <p>"But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint."</p>
+            <p style="margin-top: 15px; font-style: italic;">- Isaiah 40:31</p>
+        </div>
+        <p style="font-size: 20px; margin: 20px 0;">Equipping Young Leaders for Kingdom Impact</p>
+        
+        <div style="background: rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 15px; margin: 20px 0; max-width: 400px;">
+            <input type="text" id="userNameInput" placeholder="Enter your name (optional)" 
+                   style="width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 16px; margin-bottom: 15px;">
+            <button class="enter-btn" onclick="startJourney()">Begin Your Training 🚀</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboard" class="screen">
+        <!-- Quick Access Bar -->
+        <div class="quick-access">
+            <button class="quick-btn" onclick="navigateTo('devotional')">🙏 Today's Devotion</button>
+            <button class="quick-btn" onclick="navigateTo('quiz')">✅ Take Quiz</button>
+            <button class="quick-btn" onclick="navigateTo('scripture')">📜 Memory Verse</button>
+            <button class="quick-btn" onclick="navigateTo('accountability')">🤝 Check In</button>
+            <button class="quick-btn" onclick="navigateTo('achievements')">🏆 Progress</button>
+        </div>
+
+        <div class="dashboard-container">
+            <div class="user-progress">
+                <div class="progress-header">
+                    <h2 id="welcomeMessage" style="color: var(--primary); text-align: center;">Welcome, Young Leader!</h2>
+                    <div class="progress-badges">
+                        <div class="level-badge">
+                            <span>🦅</span>
+                            <span id="userLevel">Eaglet Leader</span>
+                        </div>
+                        <div class="streak-counter">
+                            🔥 <span id="streakDays">3</span> Day Streak
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="overallProgress">25%</div>
+                </div>
+                <p style="text-align: center; color: #6B7280;">Complete 4 more lessons to reach Soaring Eagle level!</p>
+            </div>
+
+            <h2 style="margin: 30px 0 20px; color: var(--primary);">📚 Core Curriculum</h2>
+            
+            <div class="message success" style="margin-bottom: 20px;">
+                <strong>✨ All Courses Available!</strong> Every course is unlocked and ready for you to learn at your own pace. Start with Foundations of Faith or jump to any topic you need.
+            </div>
+            
+            <div class="course-grid">
+                <div class="course-card" onclick="navigateTo('lessons')">
+                    <div class="course-icon">📖</div>
+                    <div class="course-title">Foundations of Faith</div>
+                    <div class="course-description">Essential Christian doctrines every leader must know. Understanding salvation, the Trinity, and core beliefs.</div>
+                    <div class="course-progress">
+                        <span class="lessons-count">12 Lessons</span>
+                        <span class="course-status">In Progress</span>
+                    </div>
+                </div>
+
+                <div class="course-card" onclick="navigateTo('lessons')">
+                    <div class="course-icon">🎯</div>
+                    <div class="course-title">Evangelism & Outreach</div>
+                    <div class="course-description">Learn to share the Gospel effectively in your cultural context. Street evangelism, personal testimony, and follow-up.</div>
+                    <div class="course-progress">
+                        <span class="lessons-count">10 Lessons</span>
+                        <span class="course-status">25% Complete</span>
+                    </div>
+                </div>
+
+                <div class="course-card" onclick="navigateTo('lessons')">
+                    <div class="course-icon">👥</div>
+                    <div class="course-title">Discipleship Basics</div>
+                    <div class="course-description">How to make disciples who make disciples. One-on-one mentoring, small groups, and multiplication strategies.</div>
+                    <div class="course-progress">
+                        <span class="lessons-count">15 Lessons</span>
+                        <span class="course-status">Not Started</span>
+                    </div>
+                </div>
+
+                <div class="course-card" onclick="navigateTo('lessons')">
+                    <div class="course-icon">⛪</div>
+                    <div class="course-title">Church Leadership</div>
+                    <div class="course-description">Practical skills for serving in church ministry. Team building, conflict resolution, and servant leadership.</div>
+                    <div class="course-progress">
+                        <span class="lessons-count">20 Lessons</span>
+                        <span class="course-status">Available</span>
+                    </div>
+                </div>
+
+                <div class="course-card" onclick="navigateTo('lessons')">
+                    <div class="course-icon">📝</div>
+                    <div class="course-title">Biblical Preaching</div>
+                    <div class="course-description">Develop powerful, biblical messages. Sermon preparation, delivery techniques, and expository preaching.</div>
+                    <div class="course-progress">
+                        <span class="lessons-count">18 Lessons</span>
+                        <span class="course-status">Available</span>
+                    </div>
+                </div>
+
+                <div class="course-card" onclick="navigateTo('lessons')">
+                    <div class="course-icon">🌍</div>
+                    <div class="course-title">Missions & Culture</div>
+                    <div class="course-description">Cross-cultural ministry and global missions. Understanding worldviews, contextualization, and mission strategies.</div>
+                    <div class="course-progress">
+                        <span class="lessons-count">16 Lessons</span>
+                        <span class="course-status">Available</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message info" style="margin-top: 30px;">
+                <strong>🎯 Today's Goal:</strong> Complete one lesson and review your memory verse. Remember, consistency builds strong leaders!
+            </div>
+        </div>
+    </div>
+
+    <!-- Lessons Screen -->
+    <div id="lessons" class="screen">
+        <div class="lesson-container">
+            <div class="lesson-card">
+                <div class="lesson-header">
+                    <h2 class="lesson-title">Lesson 3: The Power of Prayer</h2>
+                    <div class="lesson-meta">
+                        <span>📚 Foundations of Faith</span>
+                        <span>⏱️ 15 minutes</span>
+                        <span>📊 Lesson 3 of 12</span>
+                    </div>
+                </div>
+
+                <div class="lesson-content">
+                    <p>Prayer is not just a religious ritual—it's the lifeline of every Christian leader. Through prayer, we connect with God, receive direction, and access divine power for ministry.</p>
+
+                    <h3>Why Leaders Must Pray</h3>
+                    <p>Leadership without prayer is like trying to drive a car without fuel. You might push it for a while, but you won't go far. Jesus, our perfect example, often withdrew to pray (Luke 5:16), especially before major decisions.</p>
+
+                    <div class="scripture-box">
+                        <p>"And he said to them, 'This kind cannot be driven out by anything but prayer.'"</p>
+                        <cite>Mark 9:29 ESV</cite>
+                    </div>
+
+                    <h3>The ACTS Model of Prayer</h3>
+                    <p><strong>A</strong>doration - Begin by praising God for who He is<br>
+                    <strong>C</strong>onfession - Acknowledge your sins and receive forgiveness<br>
+                    <strong>T</strong>hanksgiving - Express gratitude for God's blessings<br>
+                    <strong>S</strong>upplication - Present your requests to God</p>
+
+                    <h3>Building a Prayer Life</h3>
+                    <p>1. <strong>Set a specific time:</strong> Morning prayer sets the tone for your day<br>
+                    2. <strong>Find a quiet place:</strong> Jesus went to the mountain to pray<br>
+                    3. <strong>Use Scripture:</strong> Pray God's Word back to Him<br>
+                    4. <strong>Keep a prayer journal:</strong> Record prayers and answers<br>
+                    5. <strong>Fast occasionally:</strong> Combine prayer with fasting for breakthrough</p>
+
+                    <h3>Prayer for Your Ministry</h3>
+                    <p>As a young leader, pray specifically for:</p>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li>Wisdom in decision-making (James 1:5)</li>
+                        <li>Boldness to share the Gospel (Acts 4:29)</li>
+                        <li>Protection from temptation (Matthew 26:41)</li>
+                        <li>Unity in your team (John 17:21)</li>
+                        <li>Open doors for ministry (Colossians 4:3)</li>
+                    </ul>
+
+                    <div class="scripture-box">
+                        <p>"The prayer of a righteous person has great power as it is working."</p>
+                        <cite>James 5:16b ESV</cite>
+                    </div>
+
+                    <h3>Application Challenge</h3>
+                    <p>This week, commit to praying for 15 minutes each morning using the ACTS model. Write down one specific prayer request and watch how God answers!</p>
+                </div>
+
+                <div class="lesson-actions">
+                    <button class="btn btn-secondary" onclick="previousLesson()">← Previous</button>
+                    <button class="btn btn-primary" onclick="completeLesson()">Complete Lesson ✓</button>
+                    <button class="btn btn-warning" onclick="navigateTo('quiz')">Take Quiz →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz" class="screen">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h2>Lesson Quiz: The Power of Prayer</h2>
+                <p>Test your understanding of the lesson</p>
+            </div>
+
+            <div class="quiz-progress">
+                <div class="quiz-dot active"></div>
+                <div class="quiz-dot"></div>
+                <div class="quiz-dot"></div>
+                <div class="quiz-dot"></div>
+                <div class="quiz-dot"></div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">
+                    What does the "C" stand for in the ACTS model of prayer?
+                </div>
+                
+                <div class="answer-option" onclick="selectAnswer(this, 'A')">
+                    <span>A)</span> Communication
+                </div>
+                <div class="answer-option" onclick="selectAnswer(this, 'B')">
+                    <span>B)</span> Confession
+                </div>
+                <div class="answer-option" onclick="selectAnswer(this, 'C')">
+                    <span>C)</span> Celebration
+                </div>
+                <div class="answer-option" onclick="selectAnswer(this, 'D')">
+                    <span>D)</span> Commitment
+                </div>
+            </div>
+
+            <div id="quizFeedback"></div>
+
+            <div class="lesson-actions">
+                <button class="btn btn-secondary" onclick="skipQuestion()">Skip</button>
+                <button class="btn btn-primary" onclick="submitAnswer()">Submit Answer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Devotional Screen -->
+    <div id="devotional" class="screen">
+        <div class="lesson-container">
+            <div class="lesson-card">
+                <div class="lesson-header">
+                    <h2 class="lesson-title">Today's Devotional</h2>
+                    <div class="lesson-meta">
+                        <span id="devotionalDate">Thursday, December 12, 2024</span>
+                        <span>🌅 Morning Manna</span>
+                    </div>
+                </div>
+
+                <div class="lesson-content">
+                    <div class="scripture-box">
+                        <p>"Trust in the Lord with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths."</p>
+                        <cite>Proverbs 3:5-6 ESV</cite>
+                    </div>
+
+                    <h3>Leading by Faith, Not Sight</h3>
+                    <p>Young leaders often feel pressure to have all the answers. We think leadership means knowing exactly what to do in every situation. But God's Word reminds us that true leadership begins with trusting Him, not our own wisdom.</p>
+
+                    <p>Moses didn't feel qualified to lead Israel out of Egypt. Gideon hid in a winepress when God called him a "mighty warrior." David was the youngest son, overlooked by his own father. Yet God used each of them powerfully—not because of their abilities, but because of their availability.</p>
+
+                    <h3>Reflection Questions</h3>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li>What area of leadership are you trying to control in your own understanding?</li>
+                        <li>How can you acknowledge God in your decisions today?</li>
+                        <li>What "straight path" might God be preparing that you cannot yet see?</li>
+                    </ul>
+
+                    <h3>Prayer</h3>
+                    <p style="font-style: italic;">"Father, I confess that I often lean on my own understanding. Help me to trust You completely today. Show me Your path for the ministry You've called me to. Give me courage to lead by faith, not by sight. In Jesus' name, Amen."</p>
+
+                    <h3>Action Step</h3>
+                    <p>Today, before making any leadership decision, pause and pray: "Lord, I acknowledge You in this. Show me Your way."</p>
+                </div>
+
+                <div class="lesson-actions">
+                    <button class="btn btn-primary" onclick="markDevotionalComplete()">Mark Complete ✓</button>
+                    <button class="btn btn-warning" onclick="shareDevotional()">Share with Partner 📤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripture Memory Screen -->
+    <div id="scripture" class="screen">
+        <div class="lesson-container">
+            <div class="lesson-card">
+                <div class="lesson-header">
+                    <h2 class="lesson-title">Scripture Memory System</h2>
+                    <div class="lesson-meta">
+                        <span>📜 Hide God's Word in Your Heart</span>
+                    </div>
+                </div>
+
+                <div class="lesson-content">
+                    <h3>This Week's Memory Verse</h3>
+                    <div class="scripture-box" style="font-size: 20px; text-align: center;">
+                        <p id="memoryVerse">"I can do all things through him who strengthens me."</p>
+                        <cite>Philippians 4:13 ESV</cite>
+                    </div>
+
+                    <h3>Memory Techniques</h3>
+                    <p>1. <strong>First Letter Method:</strong> I C D A T T H W S M</p>
+                    <p>2. <strong>Write it 10 times:</strong> Physical writing aids memory</p>
+                    <p>3. <strong>Speak it aloud:</strong> Hearing yourself strengthens recall</p>
+                    <p>4. <strong>Teach someone:</strong> Share with your accountability partner</p>
+
+                    <h3>Practice Mode</h3>
+                    <div class="form-group">
+                        <label>Type the verse from memory:</label>
+                        <textarea id="verseInput" rows="3" placeholder="Type the verse here..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="checkVerse()">Check My Memory</button>
+
+                    <div id="verseResult"></div>
+
+                    <h3>Your Memory Verses</h3>
+                    <div style="background: #F3F4F6; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <p>✅ John 3:16 - Mastered</p>
+                        <p>✅ Romans 8:28 - Mastered</p>
+                        <p>🔄 Philippians 4:13 - In Progress</p>
+                        <p>⏳ James 1:5 - Next Week</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accountability Screen -->
+    <div id="accountability" class="screen">
+        <div class="accountability-container">
+            <h2 style="color: var(--primary); margin-bottom: 25px;">🤝 Accountability System</h2>
+
+            <div class="lesson-card">
+                <h3>Add Accountability Partner</h3>
+                <p style="margin-bottom: 20px;">Connect with fellow young leaders for mutual encouragement and growth. Share contact info privately and check in weekly.</p>
+                
+                <div class="form-group">
+                    <label>Partner's Name</label>
+                    <input type="text" id="partnerName" placeholder="Enter partner's name">
+                </div>
+
+                <div class="form-group">
+                    <label>Location/Timezone</label>
+                    <input type="text" id="partnerLocation" placeholder="e.g., Lagos, Nigeria">
+                </div>
+
+                <div class="form-group">
+                    <label>Contact Method</label>
+                    <select id="contactMethod">
+                        <option>WhatsApp</option>
+                        <option>Email</option>
+                        <option>Telegram</option>
+                        <option>SMS</option>
+                        <option>Signal</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Contact Info (kept private)</label>
+                    <input type="text" id="contactInfo" placeholder="Phone number or email">
+                </div>
+
+                <button class="btn btn-primary" onclick="addPartner()">Add Partner</button>
+            </div>
+
+            <h3 style="margin: 30px 0 20px; color: var(--secondary);">Your Accountability Partners</h3>
+            <div id="partnersList">
+                <div style="text-align: center; padding: 40px; background: #F3F4F6; border-radius: 15px;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">🤝</div>
+                    <p style="color: #6B7280;">No partners added yet.</p>
+                    <p style="color: #6B7280; margin-top: 10px;">Add a partner above to start mutual accountability!</p>
+                </div>
+            </div>
+
+            <div class="lesson-card" style="margin-top: 30px;">
+                <h3>Weekly Accountability Questions</h3>
+                <p style="margin-bottom: 20px;">Use these questions when checking in with your partners:</p>
+                
+                <div class="form-group">
+                    <label>1. How consistent was your prayer life this week?</label>
+                    <select id="prayerLife">
+                        <option>Daily - strong connection with God</option>
+                        <option>Most days - generally consistent</option>
+                        <option>A few times - room for improvement</option>
+                        <option>Struggled - need prayer support</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>2. Did you share the Gospel with anyone?</label>
+                    <textarea rows="2" placeholder="Share your evangelism experiences..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>3. What temptations did you face? How did you respond?</label>
+                    <textarea rows="2" placeholder="Be honest - iron sharpens iron..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>4. How did you grow as a leader this week?</label>
+                    <textarea rows="2" placeholder="Lessons learned, skills developed..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>5. Prayer requests for next week?</label>
+                    <textarea rows="2" placeholder="How can your partners pray for you?"></textarea>
+                </div>
+
+                <button class="btn btn-success" onclick="saveAccountability()">Save My Responses</button>
+            </div>
+
+            <div class="message info" style="margin-top: 20px;">
+                <strong>💡 Tip:</strong> Schedule a weekly video call or voice chat with your partners. Consistency builds strong accountability!
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievements Screen -->
+    <div id="achievements" class="screen">
+        <div class="dashboard-container">
+            <h2 style="color: var(--primary); margin-bottom: 25px;">🏆 Your Achievements</h2>
+
+            <div class="course-grid">
+                <div class="course-card">
+                    <div class="course-icon">🔥</div>
+                    <div class="course-title">Week Warrior</div>
+                    <div class="course-description">Complete lessons 7 days in a row</div>
+                    <div class="progress-bar" style="margin-top: 15px;">
+                        <div class="progress-fill" style="width: 43%;">3/7 days</div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-icon">📖</div>
+                    <div class="course-title">Scripture Scholar</div>
+                    <div class="course-description">Memorize 10 Bible verses</div>
+                    <div class="progress-bar" style="margin-top: 15px;">
+                        <div class="progress-fill" style="width: 20%;">2/10 verses</div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-icon">🎯</div>
+                    <div class="course-title">Soul Winner</div>
+                    <div class="course-description">Lead 3 people to Christ</div>
+                    <div class="progress-bar" style="margin-top: 15px;">
+                        <div class="progress-fill" style="width: 33%;">1/3 souls</div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-icon">💯</div>
+                    <div class="course-title">Quiz Master</div>
+                    <div class="course-description">Score 100% on 5 quizzes</div>
+                    <div class="progress-bar" style="margin-top: 15px;">
+                        <div class="progress-fill" style="width: 40%;">2/5 perfect</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px; color: var(--secondary);">🏅 Completed Achievements</h3>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+                <div style="text-align: center;">
+                    <div style="font-size: 48px;">🌱</div>
+                    <p>First Steps</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 48px;">🙏</div>
+                    <p>Prayer Warrior</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 48px;">👥</div>
+                    <p>Team Player</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certificates Screen -->
+    <div id="certificates" class="screen">
+        <div class="dashboard-container">
+            <h2 style="color: var(--primary); margin-bottom: 25px;">📜 Your Certificates</h2>
+
+            <div class="certificate">
+                <h2>Certificate of Completion</h2>
+                <p style="margin: 20px 0;">This certifies that</p>
+                <p class="recipient" id="certificateName">Young Leader</p>
+                <p>has successfully completed</p>
+                <p style="font-size: 24px; color: var(--primary); margin: 20px 0;">Foundations of Faith</p>
+                <div class="certificate-seal">🏆</div>
+                <p>Awarded on: <span id="certificateDate">December 12, 2024</span></p>
+                <p style="margin-top: 30px;">
+                    <strong>Justin</strong><br>
+                    Depths to Heights Ministry
+                </p>
+            </div>
+
+            <button class="btn btn-warning" onclick="downloadCertificate()" style="margin-top: 20px;">Download Certificate 📥</button>
+        </div>
+    </div>
+
+    <!-- Crisis Screen -->
+    <div id="crisis" class="screen">
+        <div class="dashboard-container">
+            <div style="background: linear-gradient(135deg, var(--danger), #F87171); color: white; padding: 30px; border-radius: 20px; text-align: center; margin-bottom: 30px;">
+                <h2 style="font-size: 28px; margin-bottom: 15px;">Crisis Support</h2>
+                <p>If you are in crisis, please contact your local helpline for immediate support.</p>
+            </div>
+
+            <div class="course-grid">
+                <div class="course-card">
+                    <div class="course-icon">🙏</div>
+                    <div class="course-title">Spiritual Crisis</div>
+                    <div class="course-description">
+                        <p>Doubts and questions are normal in faith. Remember:</p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Talk to a trusted mentor</li>
+                            <li>Continue in prayer even when it's hard</li>
+                            <li>Read Psalms during difficult times</li>
+                            <li>Remember God's past faithfulness</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-icon">💔</div>
+                    <div class="course-title">Ministry Burnout</div>
+                    <div class="course-description">
+                        <p>Leadership can be exhausting. If you're burned out:</p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Take a sabbath rest</li>
+                            <li>Delegate responsibilities</li>
+                            <li>Seek counseling</li>
+                            <li>Remember: Even Elijah needed rest</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-icon">⚔️</div>
+                    <div class="course-title">Persecution</div>
+                    <div class="course-description">
+                        <p>If facing persecution for your faith:</p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Contact local church networks</li>
+                            <li>Document incidents</li>
+                            <li>Stay connected to believers</li>
+                            <li>Remember Matthew 5:10-12</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message info">
+                <strong>Remember:</strong> "God is our refuge and strength, a very present help in trouble." - Psalm 46:1
+            </div>
+        </div>
+    </div>
+
+    <!-- Resources Screen -->
+    <div id="resources" class="screen">
+        <div class="dashboard-container">
+            <h2 style="color: var(--primary); margin-bottom: 25px;">📚 Leadership Resources</h2>
+
+            <div class="course-grid">
+                <div class="course-card">
+                    <div class="course-icon">📖</div>
+                    <div class="course-title">Recommended Books</div>
+                    <div class="course-description">
+                        <ul style="padding-left: 20px;">
+                            <li>Spiritual Leadership - J. Oswald Sanders</li>
+                            <li>The Master Plan of Evangelism - Robert Coleman</li>
+                            <li>Desiring God - John Piper</li>
+                            <li>The Cost of Discipleship - Dietrich Bonhoeffer</li>
+                            <li>Fresh Wind, Fresh Fire - Jim Cymbala</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-icon">🎥</div>
+                    <div class="course-title">Video Resources</div>
+                    <div class="course-description">
+                        <ul style="padding-left: 20px;">
+                            <li>The Bible Project - Visual theology</li>
+                            <li>RightNow Media - Training videos</li>
+                            <li>Desiring God - John Piper sermons</li>
+                            <li>Francis Chan - Discipleship series</li>
+                            <li>David Platt - Radical teachings</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-icon">🎙️</div>
+                    <div class="course-title">Podcasts for Leaders</div>
+                    <div class="course-description">
+                        <ul style="padding-left: 20px;">
+                            <li>Craig Groeschel Leadership Podcast</li>
+                            <li>The Carey Nieuwhof Leadership Podcast</li>
+                            <li>EntreLeadership by Dave Ramsey</li>
+                            <li>The Learning Leader Show</li>
+                            <li>Leadership Today by Malcolm Webber</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-icon">🛠️</div>
+                    <div class="course-title">Ministry Tools</div>
+                    <div class="course-description">
+                        <ul style="padding-left: 20px;">
+                            <li>Blue Letter Bible - Study tools</li>
+                            <li>YouVersion Bible App - Reading plans</li>
+                            <li>Logos Bible Software - Research</li>
+                            <li>Planning Center - Church management</li>
+                            <li>Canva - Design materials</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Screen -->
+    <div id="info" class="screen">
+        <div class="dashboard-container">
+            <div class="lesson-card">
+                <h2 style="color: var(--primary); margin-bottom: 20px;">ℹ️ App Information</h2>
+                
+                <h3>What This App Does</h3>
+                <p>Rising Eagles is a comprehensive micro Bible school designed to train young Christian leaders, especially in growing church regions. It provides:</p>
+                <ul style="margin: 15px 0; padding-left: 20px; line-height: 1.8;">
+                    <li>Bite-sized theological education</li>
+                    <li>Practical ministry training</li>
+                    <li>Daily devotionals and scripture memory</li>
+                    <li>Accountability partner system</li>
+                    <li>Progress tracking and certificates</li>
+                    <li>Quiz system for knowledge retention</li>
+                    <li>Crisis support and resources</li>
+                </ul>
+
+                <h3>How to Use This App</h3>
+                <ol style="margin: 15px 0; padding-left: 20px; line-height: 1.8;">
+                    <li>Start with Foundations of Faith course</li>
+                    <li>Complete one lesson per day</li>
+                    <li>Take quizzes after each lesson</li>
+                    <li>Review daily devotionals</li>
+                    <li>Memorize weekly scripture</li>
+                    <li>Check in with accountability partners</li>
+                    <li>Earn certificates upon completion</li>
+                </ol>
+
+                <h3>Install on Your Phone</h3>
+                <div style="background: #F3F4F6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h4>iPhone/iPad:</h4>
+                    <ol style="padding-left: 20px; line-height: 1.8;">
+                        <li>Open in Safari</li>
+                        <li>Tap Share button</li>
+                        <li>Select "Add to Home Screen"</li>
+                        <li>Name it "Rising Eagles"</li>
+                        <li>Tap Add</li>
+                    </ol>
+                </div>
+
+                <div style="background: #F3F4F6; padding: 20px; border-radius: 10px;">
+                    <h4>Android:</h4>
+                    <ol style="padding-left: 20px; line-height: 1.8;">
+                        <li>Open in Chrome</li>
+                        <li>Tap menu (3 dots)</li>
+                        <li>Select "Add to Home Screen"</li>
+                        <li>Name it "Rising Eagles"</li>
+                        <li>Tap Add</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Screen -->
+    <div id="about" class="screen">
+        <div class="dashboard-container">
+            <div class="certificate" style="border-color: var(--primary);">
+                <div style="font-size: 60px; margin-bottom: 20px;">⛰️</div>
+                <h2>Depths to Heights Ministry</h2>
+                <p class="recipient">Made by Justin</p>
+                
+                <p style="margin: 20px 0; line-height: 1.8;">
+                    Our mission is to bring hope, healing, and practical biblical support to those in their deepest valleys, 
+                    guiding them to the heights of God's purpose for their lives.
+                </p>
+
+                <p style="margin: 20px 0;">
+                    <strong>Website:</strong> <a href="https://depthstoheights.org" target="_blank" style="color: var(--primary);">depthstoheights.org</a><br>
+                    <strong>Email:</strong> depthstoheights@gmail.com
+                </p>
+
+                <div style="margin: 30px 0; padding: 20px; background: rgba(245, 158, 11, 0.1); border-radius: 10px;">
+                    <h3 style="color: var(--accent); margin-bottom: 15px;">Support This Ministry</h3>
+                    <p>This app is provided free to ensure every young leader has access to training. If you've been blessed, consider supporting our work.</p>
+                </div>
+
+                <button class="btn btn-warning" onclick="window.open('https://www.paypal.com/donate/?hosted_button_id=8GRE7B8C3TP2U', '_blank');" style="padding: 15px 30px; font-size: 18px;">
+                    💝 Donate via PayPal
+                </button>
+
+                <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, rgba(30, 64, 175, 0.05), rgba(245, 158, 11, 0.05)); border-radius: 10px;">
+                    <p style="font-style: italic;">
+                        "The harvest is plentiful, but the laborers are few. Therefore pray earnestly to the Lord of the harvest to send out laborers into his harvest." - Matthew 9:37-38
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="navigateTo('dashboard')">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">Home</div>
+        </div>
+        <div class="nav-item" onclick="navigateTo('crisis')">
+            <div class="nav-icon">🆘</div>
+            <div class="nav-label">Crisis</div>
+        </div>
+        <div class="nav-item" onclick="navigateTo('resources')">
+            <div class="nav-icon">📚</div>
+            <div class="nav-label">Resources</div>
+        </div>
+        <div class="nav-item" onclick="navigateTo('info')">
+            <div class="nav-icon">ℹ️</div>
+            <div class="nav-label">Info</div>
+        </div>
+        <div class="nav-item" onclick="navigateTo('about')">
+            <div class="nav-icon">✨</div>
+            <div class="nav-label">About</div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="toggleFab()" id="fabButton">
+        📚
+    </button>
+    <div class="fab-menu" id="fabMenu">
+        <div class="fab-option" onclick="navigateTo('devotional'); toggleFab();">
+            🙏 Daily Devotion
+        </div>
+        <div class="fab-option" onclick="navigateTo('quiz'); toggleFab();">
+            ✅ Take Quiz
+        </div>
+        <div class="fab-option" onclick="navigateTo('scripture'); toggleFab();">
+            📜 Memory Verse
+        </div>
+        <div class="fab-option" onclick="navigateTo('accountability'); toggleFab();">
+            🤝 Check In
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let currentScreen = 'welcome';
+        let navigationHistory = [];
+        let userProgress = {
+            level: 'Eaglet Leader',
+            streak: 3,
+            completedLessons: 3,
+            totalLessons: 12,
+            points: 250,
+            certificates: [],
+            achievements: []
+        };
+        let currentQuestionIndex = 0;
+        let quizScore = 0;
+        let selectedAnswer = null;
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            updateUI();
+            hideNavOnWelcome();
+        });
+
+        // Navigation System
+        function startJourney() {
+            // Save user name if provided
+            const nameInput = document.getElementById('userNameInput');
+            if (nameInput && nameInput.value.trim()) {
+                localStorage.setItem('userName', nameInput.value.trim());
+            }
+            navigateTo('dashboard');
+        }
+
+        function navigateTo(screenId) {
+            if (currentScreen === 'welcome') {
+                showNavigation();
+            }
+            
+            closeMenu();
+            closeFab();
+            
+            if (currentScreen !== screenId) {
+                navigationHistory.push(currentScreen);
+            }
+            
+            showScreen(screenId);
+            updateBackButton();
+            currentScreen = screenId;
+        }
+
+        function showScreen(screenId) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            updateNavigationUI(screenId);
+            updateMenuItems(screenId);
+            
+            // Load screen-specific content
+            if (screenId === 'dashboard') {
+                updateWelcomeMessage();
+            } else if (screenId === 'accountability') {
+                displayPartners();
+            } else if (screenId === 'devotional') {
+                updateDevotionalDate();
+            } else if (screenId === 'certificates') {
+                updateCertificate();
+            }
+            
+            window.scrollTo(0, 0);
+        }
+
+        function updateWelcomeMessage() {
+            const welcomeElement = document.getElementById('welcomeMessage');
+            if (welcomeElement) {
+                const userName = localStorage.getItem('userName');
+                if (userName) {
+                    welcomeElement.textContent = `Welcome back, ${userName}!`;
+                } else {
+                    welcomeElement.textContent = 'Welcome, Young Leader!';
+                }
+            }
+        }
+
+        function updateDevotionalDate() {
+            const dateElement = document.getElementById('devotionalDate');
+            if (dateElement) {
+                const today = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                dateElement.textContent = today.toLocaleDateString('en-US', options);
+            }
+        }
+
+        function updateCertificate() {
+            const nameElement = document.getElementById('certificateName');
+            const dateElement = document.getElementById('certificateDate');
+            
+            // Get user name from stored data or use default
+            const userName = localStorage.getItem('userName') || 'Young Leader';
+            if (nameElement) {
+                nameElement.textContent = userName;
+            }
+            
+            // Set current date
+            if (dateElement) {
+                const today = new Date();
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                dateElement.textContent = today.toLocaleDateString('en-US', options);
+            }
+        }
+
+        function goBack() {
+            if (navigationHistory.length > 0) {
+                const prevScreen = navigationHistory.pop();
+                showScreen(prevScreen);
+                currentScreen = prevScreen;
+                updateBackButton();
+            } else {
+                navigateTo('dashboard');
+            }
+        }
+
+        function updateBackButton() {
+            const backBtn = document.getElementById('backBtn');
+            if (currentScreen === 'dashboard' || currentScreen === 'welcome') {
+                backBtn.style.display = 'none';
+            } else {
+                backBtn.style.display = 'block';
+            }
+        }
+
+        function updateNavigationUI(screenId) {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            const navMap = {
+                'dashboard': 0,
+                'crisis': 1,
+                'resources': 2,
+                'info': 3,
+                'about': 4
+            };
+
+            if (navMap[screenId] !== undefined) {
+                navItems[navMap[screenId]].classList.add('active');
+            }
+
+            const titles = {
+                'dashboard': 'Rising Eagles',
+                'lessons': 'Lesson Content',
+                'quiz': 'Quiz Time',
+                'devotional': 'Daily Devotional',
+                'scripture': 'Scripture Memory',
+                'accountability': 'Accountability',
+                'achievements': 'Achievements',
+                'certificates': 'Certificates',
+                'crisis': 'Crisis Support',
+                'resources': 'Resources',
+                'info': 'App Info',
+                'about': 'About Ministry'
+            };
+            
+            const navTitle = document.querySelector('.nav-title');
+            if (navTitle && titles[screenId]) {
+                navTitle.textContent = titles[screenId];
+            }
+        }
+
+        function updateMenuItems(screenId) {
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => item.classList.remove('active'));
+        }
+
+        function hideNavOnWelcome() {
+            document.querySelector('.top-nav').style.display = 'none';
+            document.querySelector('.bottom-nav').style.display = 'none';
+            document.querySelector('.fab').style.display = 'none';
+        }
+
+        function showNavigation() {
+            document.querySelector('.top-nav').style.display = 'flex';
+            document.querySelector('.bottom-nav').style.display = 'flex';
+            document.querySelector('.fab').style.display = 'flex';
+        }
+
+        // Menu Functions
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('menuOverlay');
+            const hamburger = document.querySelector('.hamburger');
+            
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+
+        function closeMenu() {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('menuOverlay');
+            const hamburger = document.querySelector('.hamburger');
+            
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+
+        // FAB Functions
+        function toggleFab() {
+            const menu = document.getElementById('fabMenu');
+            const button = document.getElementById('fabButton');
+            
+            if (menu.classList.contains('active')) {
+                menu.classList.remove('active');
+                button.innerHTML = '📚';
+            } else {
+                menu.classList.add('active');
+                button.innerHTML = '✖️';
+            }
+        }
+
+        function closeFab() {
+            const menu = document.getElementById('fabMenu');
+            const button = document.getElementById('fabButton');
+            menu.classList.remove('active');
+            button.innerHTML = '📚';
+        }
+
+        // Audio Toggle
+        function toggleAudio() {
+            const icon = document.getElementById('audioIcon');
+            const text = document.getElementById('audioText');
+            
+            if (icon.textContent === '🎵') {
+                icon.textContent = '🔇';
+                text.textContent = 'Muted';
+            } else {
+                icon.textContent = '🎵';
+                text.textContent = 'Music';
+            }
+        }
+
+        // Lesson Functions
+        function completeLesson() {
+            userProgress.completedLessons++;
+            updateProgress();
+            showMessage('Lesson completed! +50 points earned!', 'success');
+            setTimeout(() => navigateTo('quiz'), 2000);
+        }
+
+        function previousLesson() {
+            showMessage('Previous lesson loaded', 'info');
+        }
+
+        // Quiz Functions
+        function selectAnswer(element, answer) {
+            document.querySelectorAll('.answer-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedAnswer = answer;
+        }
+
+        function submitAnswer() {
+            if (!selectedAnswer) {
+                showMessage('Please select an answer', 'info');
+                return;
+            }
+
+            const correct = selectedAnswer === 'B';
+            const feedback = document.getElementById('quizFeedback');
+            
+            if (correct) {
+                feedback.innerHTML = '<div class="quiz-feedback correct">✅ Correct! Confession is part of the ACTS model.</div>';
+                quizScore++;
+            } else {
+                feedback.innerHTML = '<div class="quiz-feedback incorrect">❌ Not quite. The correct answer is B) Confession.</div>';
+            }
+
+            setTimeout(() => {
+                nextQuestion();
+            }, 2000);
+        }
+
+        function skipQuestion() {
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex >= 5) {
+                completeQuiz();
+            } else {
+                showMessage(`Question ${currentQuestionIndex + 1} of 5`, 'info');
+            }
+        }
+
+        function completeQuiz() {
+            const percentage = (quizScore / 5) * 100;
+            showMessage(`Quiz complete! You scored ${percentage}%`, 'success');
+            setTimeout(() => navigateTo('dashboard'), 2000);
+        }
+
+        // Accountability Functions
+        function addPartner() {
+            const name = document.getElementById('partnerName').value.trim();
+            const location = document.getElementById('partnerLocation').value.trim();
+            const method = document.getElementById('contactMethod').value;
+            const contact = document.getElementById('contactInfo').value.trim();
+            
+            if (!name || !location || !contact) {
+                showMessage('Please fill in all partner details', 'info');
+                return;
+            }
+            
+            // Load existing partners
+            let partners = JSON.parse(localStorage.getItem('accountabilityPartners') || '[]');
+            
+            // Add new partner
+            const partner = {
+                id: Date.now(),
+                name: name,
+                location: location,
+                method: method,
+                contact: contact,
+                addedDate: new Date().toISOString(),
+                lastCheckIn: null
+            };
+            
+            partners.push(partner);
+            localStorage.setItem('accountabilityPartners', JSON.stringify(partners));
+            
+            // Clear form
+            document.getElementById('partnerName').value = '';
+            document.getElementById('partnerLocation').value = '';
+            document.getElementById('contactInfo').value = '';
+            
+            // Update display
+            displayPartners();
+            showMessage('Partner added successfully!', 'success');
+        }
+
+        function displayPartners() {
+            const partners = JSON.parse(localStorage.getItem('accountabilityPartners') || '[]');
+            const listDiv = document.getElementById('partnersList');
+            
+            if (partners.length === 0) {
+                listDiv.innerHTML = `
+                    <div style="text-align: center; padding: 40px; background: #F3F4F6; border-radius: 15px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">🤝</div>
+                        <p style="color: #6B7280;">No partners added yet.</p>
+                        <p style="color: #6B7280; margin-top: 10px;">Add a partner above to start mutual accountability!</p>
+                    </div>
+                `;
+            } else {
+                listDiv.innerHTML = partners.map(partner => {
+                    const initials = partner.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                    const lastCheckIn = partner.lastCheckIn ? 
+                        new Date(partner.lastCheckIn).toLocaleDateString() : 
+                        'Not yet';
+                    
+                    return `
+                        <div class="partner-card">
+                            <div class="partner-info">
+                                <div class="partner-avatar">${initials}</div>
+                                <div class="partner-details">
+                                    <h4>${partner.name}</h4>
+                                    <p>${partner.location}</p>
+                                    <p>Contact via: ${partner.method}</p>
+                                    <p>Last check-in: ${lastCheckIn}</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="check-in-btn" onclick="checkInPartner(${partner.id})">Check In</button>
+                                <button class="btn btn-secondary" onclick="removePartner(${partner.id})">Remove</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function checkInPartner(partnerId) {
+            let partners = JSON.parse(localStorage.getItem('accountabilityPartners') || '[]');
+            const partner = partners.find(p => p.id === partnerId);
+            
+            if (partner) {
+                partner.lastCheckIn = new Date().toISOString();
+                localStorage.setItem('accountabilityPartners', JSON.stringify(partners));
+                displayPartners();
+                showMessage(`Checked in with ${partner.name}!`, 'success');
+            }
+        }
+
+        function removePartner(partnerId) {
+            // Create inline confirmation instead of using confirm()
+            let partners = JSON.parse(localStorage.getItem('accountabilityPartners') || '[]');
+            const partner = partners.find(p => p.id === partnerId);
+            
+            if (!partner) return;
+            
+            const partnerCard = event.target.closest('.partner-card');
+            const originalContent = partnerCard.innerHTML;
+            
+            partnerCard.innerHTML = `
+                <div style="padding: 20px; text-align: center;">
+                    <p style="margin-bottom: 15px;">Remove ${partner.name} as accountability partner?</p>
+                    <button class="btn btn-danger" onclick="confirmRemovePartner(${partnerId})">Yes, Remove</button>
+                    <button class="btn btn-secondary" onclick="cancelRemovePartner(this, '${btoa(originalContent)}')">Cancel</button>
+                </div>
+            `;
+        }
+
+        function confirmRemovePartner(partnerId) {
+            let partners = JSON.parse(localStorage.getItem('accountabilityPartners') || '[]');
+            partners = partners.filter(p => p.id !== partnerId);
+            localStorage.setItem('accountabilityPartners', JSON.stringify(partners));
+            displayPartners();
+            showMessage('Partner removed', 'info');
+        }
+
+        function cancelRemovePartner(button, encodedContent) {
+            const card = button.closest('.partner-card');
+            card.innerHTML = atob(encodedContent);
+        }
+
+        function saveAccountability() {
+            const responses = {
+                prayer: document.getElementById('prayerLife').value,
+                date: new Date().toISOString()
+            };
+            
+            let history = JSON.parse(localStorage.getItem('accountabilityHistory') || '[]');
+            history.unshift(responses);
+            if (history.length > 52) history.pop(); // Keep 1 year of history
+            
+            localStorage.setItem('accountabilityHistory', JSON.stringify(history));
+            showMessage('Weekly accountability saved! Keep growing!', 'success');
+            userProgress.streak++;
+            updateUI();
+        }
+
+        function checkIn(partner) {
+            // Legacy function for compatibility
+            showMessage(`Check-in noted!`, 'success');
+        }
+
+        function submitAccountability() {
+            // Legacy function - redirect to new function
+            saveAccountability();
+        }
+
+        // Scripture Memory
+        function checkVerse() {
+            const input = document.getElementById('verseInput').value.toLowerCase().trim();
+            const correct = "i can do all things through him who strengthens me";
+            const result = document.getElementById('verseResult');
+            
+            if (input === correct) {
+                result.innerHTML = '<div class="message success">Perfect! You\'ve memorized this verse!</div>';
+            } else {
+                result.innerHTML = '<div class="message info">Keep practicing! You\'re getting closer.</div>';
+            }
+        }
+
+        // Devotional
+        function markDevotionalComplete() {
+            showMessage('Devotional completed! +25 points', 'success');
+            userProgress.points += 25;
+            updateUI();
+        }
+
+        function shareDevotional() {
+            showMessage('Shared with accountability partners!', 'success');
+        }
+
+        // Certificate
+        function downloadCertificate() {
+            showMessage('Certificate downloaded to your device!', 'success');
+        }
+
+        // Progress Functions
+        function updateProgress() {
+            const percentage = (userProgress.completedLessons / userProgress.totalLessons) * 100;
+            const progressBar = document.getElementById('overallProgress');
+            if (progressBar) {
+                progressBar.style.width = percentage + '%';
+                progressBar.textContent = Math.round(percentage) + '%';
+            }
+            saveUserData();
+        }
+
+        function updateUI() {
+            document.getElementById('userLevel').textContent = userProgress.level;
+            document.getElementById('streakDays').textContent = userProgress.streak;
+            updateProgress();
+        }
+
+        // Data Management
+        function loadUserData() {
+            const saved = localStorage.getItem('risingEaglesProgress');
+            if (saved) {
+                userProgress = JSON.parse(saved);
+            }
+        }
+
+        function saveUserData() {
+            localStorage.setItem('risingEaglesProgress', JSON.stringify(userProgress));
+        }
+
+        // Message System
+        function showMessage(text, type) {
+            const msg = document.createElement('div');
+            msg.className = `message ${type}`;
+            msg.textContent = text;
+            msg.style.position = 'fixed';
+            msg.style.top = '80px';
+            msg.style.left = '50%';
+            msg.style.transform = 'translateX(-50%)';
+            msg.style.zIndex = '2000';
+            msg.style.maxWidth = '90%';
+            msg.style.width = '400px';
+            
+            document.body.appendChild(msg);
+            
+            setTimeout(() => {
+                msg.remove();
+            }, 3000);
+        }
+
+        // Close FAB on outside click
+        document.addEventListener('click', function(e) {
+            const fab = document.getElementById('fabButton');
+            const menu = document.getElementById('fabMenu');
+            
+            if (!fab.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.remove('active');
+                fab.innerHTML = '📚';
+            }
+        });
+    </script>
+</body>
+</html>
